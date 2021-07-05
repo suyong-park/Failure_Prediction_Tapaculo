@@ -13,6 +13,7 @@ verify_api=$(jq .status check.json)
 
 if [ $verify_api == true ]; then
 	echo "VERIFY SUCCESS !!!"
+	echo "NEXT STEP."
 else
 	echo "VERIFY FAIL !!!"
 	echo "PLEASE CHECK YOUR API KEY AND API SECRET"
@@ -20,26 +21,42 @@ else
 	exit
 fi
 
+echo "Get historical time data for the specified node."
+
+echo "Please enter your data Start Time like 'yyyy-MM-dd-HH-mm-ss'"
+start_time=`java trans_timestamp`
+while [[ "$start_time" =~ "ERROR" ]]
+do
+        echo "TIMESTAMP ERROR !!!"
+        echo "PLEASE CHECK YOUR TIMESTAMP"
+        echo "PLEASE RE - ENTER START_TIME"
+        start_time=`java trans_timestamp`
+done
+
+echo "Please enter your data End Time like 'yyyy-MM-dd-HH-mm-ss'"
+end_time=`java trans_timestamp`
+while [[ "$end_time" =~ "ERROR" ]]
+do
+        echo "TIMESTAMP ERROR !!!"
+        echo "PLEASE CHECK YOUR TIMESTAMP"
+        echo "PLEASE RE - ENTER END_TIME"
+        end_time=`java trans_timestamp`
+done
+
 echo -n "device mac address : "
 read device_mac
 echo -n "sensor mac address : "
 read sensor_mac
 
-echo "Get historical time data for the specified node."
-echo "Please enter your data Start Time like 'yyyy-MM-dd-HH-mm-ss'"
-start_time=`java trans_timestamp`
-echo "Please enter your data End Time like 'yyyy-MM-dd-HH-mm-ss'"
-end_time=`java trans_timestamp`
+curl -d  "api_key=$api_key&api_secret=$api_secret&device_mac=$device_mac&sensor_mac=$sensor_mac&start_time=$start_time&end_time=$end_time" -X POST https://oa.tapaculo365.com/tp365/v1/channel/get_olddata | jq . > get_olddata.json
+
+curl -d  "api_key=$api_key&api_secret=$api_secret&device_mac=$device_mac&sensor_mac=$sensor_mac" -X POST https://oa.tapaculo365.com/tp365/v1/channel/get_recentdata | jq . > get_recentdata.json
 
 echo "Get the list and current value of all channels owned by yours. Please enter device info."
 echo -n "search : "
 read search_channel
 
 curl -d  "api_key=$api_key&api_secret=$api_secret&search=$search_channel" -X POST https://oa.tapaculo365.com/tp365/v1/channel/get_lst | jq . > channel_get_lst.json
-
-curl -d  "api_key=$api_key&api_secret=$api_secret&device_mac=$device_mac&sensor_mac=$sensor_mac&start_time=$start_time&end_time=$end_time" -X POST https://oa.tapaculo365.com/tp365/v1/channel/get_olddata | jq . > get_olddata.json
-
-curl -d  "api_key=$api_key&api_secret=$api_secret&device_mac=$device_mac&sensor_mac=$sensor_mac" -X POST https://oa.tapaculo365.com/tp365/v1/channel/get_recentdata | jq. > get_recentdata.json
 
 echo "Get the current value of the specified channel. Please enter sensor id."
 echo -n "sensor id : "
