@@ -26,9 +26,11 @@ public class trans_timestamp {
         valid.content_Validation();
         valid.time_Validation();
 
+        String time = values[0] + "-" + values[1] + "-" + values[2] + " " + values[3] + ":" + values[4] + ":" + values[5] + ".0";
+
         try {
-            Timestamp timestamp = Timestamp.valueOf(values[0] + "-" + values[1] + "-" + values[2] + " " + values[3] + ":" + values[4] + ":" + values[5] + ".0");
-            System.out.println(timestamp.getTime());
+            Timestamp timestamp = Timestamp.valueOf(time);
+            System.out.println(timestamp.getTime()/1000);
         } catch (IllegalArgumentException e) {
             System.out.println("TIMESTAMP FORMAT ERROR");
         }
