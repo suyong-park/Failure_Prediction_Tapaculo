@@ -134,3 +134,5 @@ echo
 
 
 mv check.json channel_get_lst.json get_info.json get_lst.json get_olddata.json get_recentdata.json get_value.json get_values.json json/
+
+./upload_json_to_hdfs.sh
