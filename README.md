@@ -1,4 +1,4 @@
-## Failure_Prediction_Tapaculo
+## Failure_Prediction_Tapaculo (DEKIST)
 
 ```
 1. Collect data using linux shell script from tapaculo365.
